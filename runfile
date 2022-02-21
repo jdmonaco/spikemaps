@@ -1,0 +1,100 @@
+#!/usr/bin/env bash
+set -e
+
+# template runfile
+
+USAGE="Usage: run -e|(m)vim|(un)install|exportenv|ipython|cluster|notebook"
+
+if (( $# )); then
+    runcmd="$1"
+    shift
+else
+    echo "$USAGE"
+    exit 1
+fi
+
+
+# Add run commands as switch cases below. Do not make edits
+# outside of case blocks. Note: Optional args are available
+# as "${@}". If used, consider the first line in the block
+# as a usage statement.
+
+
+SESSFILE="$HOME/projects/template/session.vim"
+NBDIR="$HOME/projects/template/notebooks"
+
+function __conda_check {
+    if [[ "${CONDA_DEFAULT_ENV+x}" ]]; then
+        if [[ "$CONDA_DEFAULT_ENV" != "template" ]]; then
+            echo "Wrong environment ($CONDA_DEFAULT_ENV). Please activate "
+            echo "'template' with 'conda activate template'."
+            exit 1
+        fi
+    else
+        echo "Please run 'conda activate template' first."
+        exit 2
+    fi
+}
+
+
+case "$runcmd" in
+
+code)
+    if [[ -r "template.code-workspace" ]]; then
+        open template.code-workspace
+    else
+        code .
+    fi
+    ;;
+
+vim)
+    if [[ -r "$SESSFILE" ]]; then
+        vim -S "$SESSFILE" 2>/dev/null
+    else
+        vim +"Obsession $SESSFILE" 2>/dev/null
+    fi
+    ;;
+
+mvim)
+    if [[ -r "$SESSFILE" ]]; then
+        mvim -S "$SESSFILE" 2>/dev/null
+    else
+        mvim +"Obsession $SESSFILE" 2>/dev/null
+    fi
+    ;;
+
+install)
+    pip install --no-deps -e "/Users/joe/code/template" ;;
+
+uninstall)
+    pip uninstall -y template
+    ;;
+
+ipython)
+    __conda_check
+    ipython --profile-dir="/Users/joe/projects/template/ipython"
+    ;;
+
+cluster)
+    __conda_check
+    ipcluster start --profile-dir="/Users/joe/projects/template/ipython"
+    ;;
+
+notebook)
+    __conda_check
+    [[ ! -d "$NBDIR" ]] && mkdir -p "$NBDIR"
+    jupyter notebook --notebook-dir="$NBDIR" &
+    ;;
+
+killnb) pkill -f jupyter ;;
+
+finder) open . -a finder ;;
+
+tests) py.test -q tests ;;
+
+*)
+    echo $USAGE
+    exit 1
+    ;;
+
+esac
