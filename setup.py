@@ -1,5 +1,5 @@
 """
-Setup installation file for template.
+Setup installation file for spikemaps package.
 """
 
 from setuptools import setup
@@ -11,11 +11,11 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name='template',
+    name='spikemaps',
     version='0.1.0',
-    description='template',
+    description='spikemaps',
     long_description=long_description,
-    url='https://github.com/jdmonaco/template',
+    url='https://github.com/jdmonaco/spikemaps',
     author='Joseph Monaco',
     author_email='jmonaco@hey.com',
     license='MIT',
@@ -23,7 +23,8 @@ setup(
         'Development Status :: 1 - Planning',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.10'
+        'Programming Language :: Python :: 3.10',
     ],
-    keywords='python',
-    packages=['template'])
+    keywords='neuroscience hippocampus place-cells behavior analysis maps',
+    packages=['spikemaps'],
+)
